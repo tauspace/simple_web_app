@@ -24,14 +24,18 @@ COPY config config/
 COPY priv priv/
 COPY assets assets/
 
-# Download esbuild and tailwind binaries, then build and digest assets
+# Download esbuild and tailwind binaries (cached layer; re-runs only when config/assets change)
 RUN mix tailwind.install --if-missing && \
-    mix esbuild.install --if-missing && \
-    mix assets.deploy
+    mix esbuild.install --if-missing
 
 COPY lib lib/
 
+# Compile application — the phoenix_live_view compiler writes
+# _build/prod/phoenix-colocated/simple_web_app/colocated.css here,
+# which app.css imports and Tailwind must resolve before assets.deploy.
 RUN mix compile
+
+RUN mix assets.deploy
 RUN mix release
 
 # ── Stage 2: runtime ──────────────────────────────────────────────────────────
