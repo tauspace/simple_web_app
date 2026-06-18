@@ -33,6 +33,82 @@ If you do not have a Gotenberg instance, the quickest way to start one locally i
 docker run --rm -p 3000:3000 gotenberg/gotenberg:8
 ```
 
+## Docker
+
+### Build
+
+```bash
+docker build -t simple_web_app .
+```
+
+To target a different Elixir / OTP / Alpine version, override the build args:
+
+```bash
+docker build \
+  --build-arg ELIXIR_VERSION=1.18.3 \
+  --build-arg OTP_VERSION=27.3.4 \
+  --build-arg ALPINE_VERSION=3.21.3 \
+  -t simple_web_app .
+```
+
+### Run
+
+The app needs Gotenberg reachable from inside the container. The simplest setup is Docker Compose (see below). For a quick manual run, start Gotenberg first on a shared network:
+
+```bash
+docker network create app_net
+
+docker run --rm -d \
+  --name gotenberg \
+  --network app_net \
+  gotenberg/gotenberg:8
+
+docker run --rm \
+  --network app_net \
+  -e SECRET_KEY_BASE=$(openssl rand -base64 48) \
+  -e GOTENBERG_URL=http://gotenberg:3000 \
+  -e PHX_HOST=localhost \
+  -p 4000:4000 \
+  simple_web_app
+```
+
+Visit [localhost:4000](http://localhost:4000).
+
+### Docker Compose
+
+Create a `compose.yaml` alongside the project (not committed — it typically holds secrets):
+
+```yaml
+services:
+  app:
+    build: .
+    ports:
+      - "4000:4000"
+    environment:
+      SECRET_KEY_BASE: "replace_with_output_of_mix_phx_gen_secret"
+      GOTENBERG_URL: http://gotenberg:3000
+      PHX_HOST: localhost
+    depends_on:
+      - gotenberg
+
+  gotenberg:
+    image: gotenberg/gotenberg:8
+    expose:
+      - "3000"
+```
+
+Then:
+
+```bash
+docker compose up
+```
+
+Generate a `SECRET_KEY_BASE` value with:
+
+```bash
+mix phx.gen.secret
+```
+
 ## Setup and start
 
 ```bash
