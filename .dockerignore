@@ -1,0 +1,6 @@
+.git
+_build
+deps
+.elixir_ls
+priv/static/assets
+priv/static/cache_manifest.json
