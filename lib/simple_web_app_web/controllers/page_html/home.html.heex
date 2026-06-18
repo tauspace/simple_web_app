@@ -1,0 +1,55 @@
+<Layouts.flash_group flash={@flash} />
+<div class="max-w-4xl mx-auto px-6 py-10">
+  <div class="flex items-center gap-4 mb-2">
+    <img
+      src={"data:image/png;base64,#{SimpleWebAppWeb.ReportHTML.logo_base64()}"}
+      alt="Company Logo"
+      class="w-16 h-16"
+    />
+    <div>
+      <h1 class="text-2xl font-bold">Employee Report</h1>
+      <p class="text-sm text-base-content/60">html_to_pdf demo — includes a base64-encoded PNG image</p>
+    </div>
+  </div>
+
+  <div class="flex justify-end mb-4">
+    <form action={~p"/download-pdf"} method="post">
+      <input type="hidden" name="_csrf_token" value={Plug.CSRFProtection.get_csrf_token()} />
+      <button
+        type="submit"
+        class="btn btn-primary"
+      >
+        Download PDF
+      </button>
+    </form>
+  </div>
+
+  <div class="overflow-x-auto rounded-box border border-base-300">
+    <table class="table table-zebra w-full">
+      <thead>
+        <tr class="bg-primary text-primary-content">
+          <th>#</th>
+          <th>Name</th>
+          <th>Department</th>
+          <th>Salary</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <%= for row <- SimpleWebAppWeb.ReportHTML.sample_data() do %>
+          <tr>
+            <td><%= row.id %></td>
+            <td><%= row.name %></td>
+            <td><%= row.department %></td>
+            <td><%= row.salary %></td>
+            <td>
+              <span class={if row.status == "Active", do: "badge badge-success badge-sm", else: "badge badge-error badge-sm"}>
+                <%= row.status %>
+              </span>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>
