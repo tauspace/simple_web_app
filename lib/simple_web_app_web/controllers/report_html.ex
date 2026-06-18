@@ -1,8 +1,7 @@
 defmodule SimpleWebAppWeb.ReportHTML do
-  # A 32x32 orange square PNG encoded as base64, used to verify image support in PDFs.
-  @logo_base64 "iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAbklEQVRYw+3WMQqAMAxG4aQ9hO" <>
-               "tf8ASeqYMgiHMHJ+kQcOjQycfSLv0hgYSXj5CXQCAQCAQCgUAgEAgEAoFAIBAIBAKBQCAQCAQC" <>
-               "gUAgEAgEAoFAIBAIBAKBQCAQCAQCgUAgEAgEAoGHuQE9GxAq5AAAAABJRU5ErkJggg=="
+  # A 32x32 orange (#F97316) square PNG encoded as base64, used to verify image support in PDFs.
+  @logo_base64 "iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAIAAAD8GO2jAAAAKklEQVR42mP4WSxGU8QwasGoBaMW" <>
+               "jFowasGoBaMWjFowasGoBaMWDBULADzqCFvAf1PqAAAAAElFTkSuQmCC"
 
   @sample_data [
     %{id: 1, name: "Alice Johnson", department: "Engineering", salary: "$95,000", status: "Active"},
